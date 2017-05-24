@@ -37,10 +37,10 @@ needsPackage("NumericSolutions",FileName => "~/Documents/M2pack/Def/NumericSolut
 export {
  "solveInequalities",
  -- options
- "Tollerance"
+ "Toll"
 }
 
-solveInequalities = method(TypicalValue => List, Options => {Tollerance => 10.^-3})
+solveInequalities = method(TypicalValue => List, Options => {Toll => 10.^-3})
 solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  -- compute the solution to a system of polynomial inequalities.
  
@@ -51,7 +51,7 @@ solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  -- output: a set of solutions.
  
  -- define the tolerance
- toll := opts.Tollerance;
+ toll := opts.Toll;
  
  
  -- get parameters from the data
@@ -117,7 +117,7 @@ solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  S := coeR[Rvars | vvars | wvars | uvars | kvars | zvars | yvars];
  svars := gens S;
  
- print svars;
+ -- print svars;
  
  nxvars := new List from  (svars#0)..(svars#(lnx-1));
  if lnx != lnv then (
@@ -138,7 +138,6 @@ solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  if lnz != lny then (
   nyvars := new List from  (svars#lnz)..(svars#(lny-1));
  );
- print nxvars;
  
  
  -- define the polynomial J
@@ -168,7 +167,7 @@ solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  );
  I = new List from I;
  I = ideal(I);
- print transpose gens I;
+ -- print transpose gens I;
  
  sols := solveSystem(I, Tolerance => toRR toll);
  
@@ -199,4 +198,44 @@ solveInequalities(List, List, List) := opts -> (nonstrict,strict,diseq) -> (
  
  rsol
 )
+
+-- End of source code --
+
+-------------------
+-- Documentation
+-------------------
+beginDocumentation()
+
+document { 
+ Key => DisSolve,
+ Headline => "A package to solve systems of polynomial inequalities",
+ EM "DisSolve", " is a package for solving systems of polynomial inequalities.
+ It requires a procedure to compute the set of all the solutions to a
+ system of polynomial equalities, as the ones given in the package NumericSolutions."
+} 
+
+document {
+ Key => {solveInequalities,(solveInequalities,List,List,List),
+         [solveInequalities, Toll]},
+ Headline => "script to compute a set of solutions to a system of inequalities",
+ Usage => "solveInequalities(nonstrict,strict,diseq)",
+ Inputs => {
+  "nonstrict" => { "polynomials that need to be nonnegative."},
+  "strict" => { "polynomials that need to be positive."} ,
+  "diseq" => {"polynomials that need to be different from zero."},
+  Toll => {"numerical tolerance."}
+ },
+ Outputs => {
+  "sol" => {"set of real points that satisfy the inequalities."}
+ },
+ EXAMPLE lines ///
+  R = QQ[x_1,x_2];
+  ss = x_1^2+x_2^2-1;
+  ns = x_1^2-1;
+  di = x_1-2;
+  sol = solveInequalities({ss},{ns},{di})
+ ///
+}    
+
+end
 
